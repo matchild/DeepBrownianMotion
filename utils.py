@@ -17,11 +17,8 @@ def generate_dataset(N_SIMS:int, trajectory_length:int):
   trajectory_length: number of steps in each trajectory
   '''
 
-
   X=np.zeros((N_SIMS,trajectory_length ,1)) #Create empty X vector 
   Y=np.zeros(N_SIMS) #Create empty y vector
-
-
 
   for i in range(N_SIMS):
     h=round(np.random.uniform(0.01,0.90), 4) #Choose Hurst paramenter from uniform distribution (only take the first 4 decimal digits)
@@ -38,7 +35,6 @@ def generate_dataset(N_SIMS:int, trajectory_length:int):
   X_train=X[:int(N_SIMS*0.7)]
   Y_train=Y[:int(N_SIMS*0.7)]
 
-
   X_test=X[int(N_SIMS*0.7):]
   Y_test=Y[int(N_SIMS*0.7):]
 
@@ -46,6 +42,14 @@ def generate_dataset(N_SIMS:int, trajectory_length:int):
 
 
 def DatasetMAE(loader, model, device):
+  '''
+  This functions calculates the average Mean Absloute Error (MAE) on a dataset.
+
+  loader: data loader corresponding to the dataset we want to evaluate the model on
+  model: model to be evaluated
+  device: device where to run the model (e.g. 'cuda')
+  
+  '''
   loss=0
   num_samples = 0
   model.eval()  # set model to evaluation mode
@@ -63,6 +67,12 @@ def DatasetMAE(loader, model, device):
 
 
 class SimulationDatset(Dataset):
+  '''
+  Fine tuned version of pytorch Dataset class. Trajectories are normalized and are converted into torch tensors.
+
+  X: input trajectories of shape (N, trajectory length, 1)
+  Y: vector of hurst parameters of shape (N, 1)
+  '''
 
   def __init__(self, X, Y):
 
@@ -80,35 +90,7 @@ class SimulationDatset(Dataset):
   def __getitem__(self, idx):
       return self.X[idx], self.Y[idx]
       
-
-
-
-class DeepBrownianEncoder(torch.nn.Module):
-
-    def __init__(self, embedding_dim=1, num_layers=1, num_heads=1, trajectory_length=102):
-        super(DeepBrownianEncoder, self).__init__()
-
-        self.embedding_dim=embedding_dim
-        self.num_layers=num_layers
-        self.num_heads=num_heads
-        self.trajectory_length=trajectory_length
-        
-        self.linear1 = torch.nn.Linear(1, embedding_dim)
-        self.encoder_layer = torch.nn.TransformerEncoderLayer(d_model=self.embedding_dim, nhead=num_heads, batch_first=True)
-        self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=self.num_layers)
-        self.linear2 = torch.nn.Linear(self.trajectory_length*self.embedding_dim, 1)
-
-
-
-    def forward(self, x):
-        batch_size = x.shape[0]
-        
-        x = self.linear1(x)
-        x = self.transformer_encoder(x)
-        x = x.view(batch_size, -1)
-        x = self.linear2(x)
-        return x
-    
+  
 
 
 def train(dataloader, model, loss_fn, optimizer, device):
@@ -133,3 +115,40 @@ def train(dataloader, model, loss_fn, optimizer, device):
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
         
     return losses
+
+
+######################################
+
+
+class DeepBrownianEncoder(torch.nn.Module):
+
+    def __init__(self, embedding_dim=1, num_layers=1, num_heads=1, trajectory_length=102):
+        super(DeepBrownianEncoder, self).__init__()
+
+        self.embedding_dim = embedding_dim
+        self.num_layers = num_layers
+        self.num_heads = num_heads
+        self.trajectory_length = trajectory_length
+        
+        # Add the positional embedding module
+        self.positional_encoder = nn.Embedding(trajectory_length, embedding_dim)
+
+        self.linear1 = torch.nn.Linear(1, embedding_dim)
+        self.encoder_layer = torch.nn.TransformerEncoderLayer(d_model=self.embedding_dim, nhead=num_heads, batch_first=True)
+        self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=self.num_layers)
+        self.linear2 = torch.nn.Linear(self.trajectory_length * self.embedding_dim, 1)
+
+    def forward(self, x):
+        batch_size = x.shape[0]
+        sequence_length = x.shape[1]
+
+        # Generate positional embeddings based on the position of each element in the input sequence
+        positions = torch.arange(0, sequence_length, dtype=torch.long, device=x.device).unsqueeze(0).expand(batch_size, -1)
+        positional_embeddings = self.positional_encoder(positions)
+
+        x = self.linear1(x)
+        x = x + positional_embeddings  # Add positional embeddings to the input embeddings
+        x = self.transformer_encoder(x)
+        x = x.view(batch_size, -1)
+        x = self.linear2(x)
+        return x
