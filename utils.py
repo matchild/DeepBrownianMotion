@@ -122,7 +122,7 @@ def train(dataloader, model, loss_fn, optimizer, device):
 
 class DeepBrownianEncoder(torch.nn.Module):
 
-    def __init__(self, embedding_dim=1, num_layers=1, num_heads=1, trajectory_length=102):
+    def __init__(self, embedding_dim=1, num_layers=1, num_heads=1, trajectory_length=100):
         super(DeepBrownianEncoder, self).__init__()
 
         self.embedding_dim = embedding_dim
