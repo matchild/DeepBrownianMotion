@@ -1,5 +1,5 @@
 # DeepBrownianMotion
-*A deep learning classification tool for Brownian diffusion trajectories.*
+*A deep learning classification tool for anomalous diffusion trajectories.*
 
 ## Introduction: diffusion
 
