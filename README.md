@@ -20,3 +20,14 @@ This leads to a classication of diffusion dynamics into three main classes:
 - Superdiffusion when $\alpha > 1$
 
 Whenever $\alpha \neq 1$ the process is called \emph{anomalous diffusion}. Fractional Brownian motion models are a good compromise between simpicity and flexibility to simulate diffusion trajectories.
+
+## Usage
+
+
+
+## Training
+
+
+## Credits
+
+
