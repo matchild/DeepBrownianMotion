@@ -45,7 +45,7 @@ This script takes as input a vector containing the positions of the particle and
 
 
 ## Credits
-I wanted to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from Volpe and his team and would not have been possible without the stochastic simulation tool. As always I also want to thank the Pytorch team for their amazing work.
+I wanted to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from Volpe and his team and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
 
 
 
