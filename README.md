@@ -40,8 +40,13 @@ Methods based on Fractional Brownian motion are a simple, though mathematically 
 ## Usage
 This script takes as input a vector containing the positions of the particle and returns the $\alpha$ parameter.
 
+```python
+from DeepBrownianMotion import DeepBrownianMotion
+
+#Generate a vector of random numbers to use as an example
 
 
+```
 
 
 ## Credits
