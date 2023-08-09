@@ -1,8 +1,15 @@
 # DeepBrownianMotion
 *A deep learning classification tool for anomalous diffusion trajectories.*
 
-## Introduction
 
+## Introduction
+<p align="center">
+  <picture>
+    <img src="https://github.com/matchild/DeepBrownianMotion/blob/main/media/diffusion.png">
+  </picture>
+    <br>
+    MSD against time for different fractional Brownian motion realizations ($\alpha$ = 0.5, 1.0, and 1.5).
+</p>
 Let's consider the example of a particle immersed in a medium. Since its dynamics is complicated and depends on a very large number of parameters, it is not straightforward to identify useful quantities that characterize its motion. One of the most important is the mean squared displacement (MSD),  which connects time to the average of the squared distance travelled.
 Given a continuous random variable $\boldsymbol{X}(t)$ describing the position of a particle at time $t$, MSD is defined as:
 
