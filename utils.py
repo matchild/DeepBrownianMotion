@@ -16,22 +16,23 @@ def generate_dataset(N_SIMS:int, trajectory_length:int):
   N_SIMS: number of simulations to be generated
   trajectory_length: number of steps in each trajectory
   '''
+  # Create empty X and Y vectors
+  X=np.zeros((N_SIMS,trajectory_length ,1)) 
+  Y=np.zeros(N_SIMS)
 
-  X=np.zeros((N_SIMS,trajectory_length ,1)) #Create empty X vector 
-  Y=np.zeros(N_SIMS) #Create empty y vector
-
+  # Fill X and Y vectors with simulated fractional brownian motion trajectories, each with a different value for alpha.
   for i in range(N_SIMS):
-    h=round(np.random.uniform(0.01,0.90), 4) #Choose Hurst paramenter from uniform distribution (only take the first 4 decimal digits)
-    f = FractionalBrownianMotion(hurst=h, t=1)
+    alpha=np.around(np.random.uniform(0.01, 1.8), 4)
+    f = FractionalBrownianMotion(hurst=0.5*alpha, t=1)
     X[i]= f.sample(trajectory_length-1).reshape(trajectory_length, 1)
-    Y[i]=h
+    Y[i]=alpha
 
     if i%10000 == 0:
       print('Simulations Generated:',i)
 
   Y=Y.reshape(-1,1)
 
-  #Split train and test datasets (70/30)
+  # Split train and test datasets (70/30)
   X_train=X[:int(N_SIMS*0.7)]
   Y_train=Y[:int(N_SIMS*0.7)]
 
@@ -47,12 +48,12 @@ def DatasetMAE(loader, model, device):
 
   loader: data loader corresponding to the dataset we want to evaluate the model on
   model: model to be evaluated
-  device: device where to run the model (e.g. 'cuda')
+  device: device to run the model on (e.g. 'cuda')
   
   '''
   loss=0
   num_samples = 0
-  model.eval()  # set model to evaluation mode
+  model.eval()  # Set model to evaluation mode
   with torch.no_grad():
       for x, y in loader:
           x = x.to(device=device) # move to device, e.g. GPU
@@ -76,11 +77,11 @@ class SimulationDatset(Dataset):
 
   def __init__(self, X, Y):
 
-    #scaling features
+    # Scale features
     X=(X - np.mean(X, axis=1, keepdims=True)) / np.std(X, axis=1, keepdims=True) #Normalize X
-    Y=Y #No need to normalize y
+    Y=Y # No need to normalize y
 
-    #converting to torch tensors
+    # Convert to torch tensors
     self.X=torch.tensor(X, dtype=torch.float32)
     self.Y=torch.tensor(Y, dtype=torch.float32)
 
@@ -94,6 +95,15 @@ class SimulationDatset(Dataset):
 
 
 def train(dataloader, model, loss_fn, optimizer, device):
+    '''
+    This functions trains the model for an epoch.
+
+    dataloader: dataloader object
+    model: pytorch model
+    loss_fn: loss function for the model
+    optimizer: optimizer function
+    device: device to run the model on (e.g. 'cuda')
+    '''
     losses=[]
     size = len(dataloader.dataset)
     model.train()
@@ -121,6 +131,12 @@ def train(dataloader, model, loss_fn, optimizer, device):
 
 
 class DeepBrownianEncoder(torch.nn.Module):
+    
+    '''
+    This is the deep learning architecture that used to predict the alpha parameter.
+    It is based on a Transformer Encoder and it is made of 5 layers: embedding layer, positional encoding, transformer encoder, linear layer.
+    It takes a batch of trajectories as input and outputs a vector of predicted alpha parameters.
+    '''
 
     def __init__(self, embedding_dim=1, num_layers=1, num_heads=1, trajectory_length=100):
         super(DeepBrownianEncoder, self).__init__()
@@ -130,7 +146,7 @@ class DeepBrownianEncoder(torch.nn.Module):
         self.num_heads = num_heads
         self.trajectory_length = trajectory_length
         
-        # Add the positional embedding module
+        # Positional embedding module
         self.positional_encoder = nn.Embedding(trajectory_length, embedding_dim)
 
         self.linear1 = torch.nn.Linear(1, embedding_dim)
@@ -146,9 +162,9 @@ class DeepBrownianEncoder(torch.nn.Module):
         positions = torch.arange(0, sequence_length, dtype=torch.long, device=x.device).unsqueeze(0).expand(batch_size, -1)
         positional_embeddings = self.positional_encoder(positions)
 
-        x = self.linear1(x)
+        x = self.linear1(x) # Embed each step in the trajectory
         x = x + positional_embeddings  # Add positional embeddings to the input embeddings
         x = self.transformer_encoder(x)
-        x = x.view(batch_size, -1)
-        x = self.linear2(x)
+        x = x.view(batch_size, -1) # Flatten the output tensor
+        x = self.linear2(x) # Convert this tensor into a scalar
         return x
