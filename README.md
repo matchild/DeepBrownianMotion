@@ -35,6 +35,14 @@ There have been attemps to use deep learning techniques to overperform tradition
 ## Training
 Methods based on Fractional Brownian motion are a simple, though mathematically rigorous, way to simulate diffusion trajectories starting from the $\alpha$ parameter. A simulator[^3] was used to generate 200000, 100 step long, trajectories with $\alpha$ sampled from a uniform distribution 0-2.  A Transformer Encoder was then trained to predict $\alpha$ using a pytorch implementation. Preliminary analysis suggests that an embedding size close to 32 is enough to fully take advantage of the information contained in the trajectories.
 
+<p align="center">
+  <picture>
+    <img src="https://github.com/matchild/DeepBrownianMotion/blob/main/media/training.png">
+  </picture>
+    <br>
+      Mean squared error (MSE) as a function of the number of iterations. Vertical red dashed lines represent epochs.
+</p>
+
 [^3]: stochastic
 
 ## Requirements
