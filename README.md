@@ -8,10 +8,11 @@
     <img src="https://github.com/matchild/DeepBrownianMotion/blob/main/media/diffusion.png">
   </picture>
     <br>
-      MSD against time for different fractional Brownian motion realizations ($\alpha$ = 0.5, 1.0, and 1.5).
+    MSD against time for different fractional Brownian motion realizations ($\alpha$ = 0.5, 1.0, and 1.5).
 </p>
+
 Let's consider the motion a particle immersed in a medium. Since its dynamics is very complicated and depends on a large number of parameters, it is not straightforward to identify useful quantities to characterize it. Of fundamental importance is the mean squared displacement (MSD), which connects time to the average of the squared distance travelled.
-Given a continuous random variable $\boldsymbol{X}(t)$ describing the position of a particle at time t, MSD is defined as:
+Given a continuous random variable __X(t)__ describing the position of a particle at time t, MSD is defined as:
 
 
    $\mathrm{MSD}\left(\tau\right)$ $=$ $\langle\left|\boldsymbol{X}\left(t+\tau\right)-\boldsymbol{X}\left(t\right)\right|^2\rangle$
