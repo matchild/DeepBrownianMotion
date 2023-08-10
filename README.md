@@ -10,7 +10,7 @@
     <br>
       MSD against time for different fractional Brownian motion realizations ($\alpha$ = 0.5, 1.0, and 1.5).
 </p>
-Let's consider the example of a particle immersed in a medium. Since its dynamics is complicated and depends on a very large number of parameters, it is not straightforward to identify useful quantities that characterize its motion. One of the most important is the mean squared displacement (MSD),  which connects time to the average of the squared distance travelled.
+Let's consider the motion a particle immersed in a medium. Since its dynamics is very complicated and depends on a large number of parameters, it is not straightforward to identify useful quantities to characterize it. Of fundamental importance is the mean squared displacement (MSD), which connects time to the average of the squared distance travelled.
 Given a continuous random variable $\boldsymbol{X}(t)$ describing the position of a particle at time t, MSD is defined as:
 
 
@@ -26,14 +26,14 @@ This naturally leads to a classication of diffusion dynamics into three main cla
 Whenever $\alpha \neq 1$ the process is called _anomalous diffusion_.
 
 
-There have been attemps to use deep learning techniques to overperform traditional methods to infer the $\alpha$ parameter from a trajectory[^1]. This project is meant to extend the previously used _state of the art_ approach -an LSTM neual network- with a Transformer Encoder[^2]
+There have been attemps to use deep learning techniques to overperform traditional methods to infer the $\alpha$ parameter from a trajectory[^1]. This project is meant to extend the previously used _state of the art_ approach -an LSTM neural network- with a Transformer Encoder[^2]
 
 
 [^1]: Aykut Argun et al 2021 J. Phys. A: Math. Theor. 54 294003
 [^2]: [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 
 ## Training
-Methods based on Fractional Brownian motion are a simple, though mathematically rigorous, way to simulate diffusion trajectories starting from the $\alpha$ parameter. A simulator[^3] was used to generate 200000, 100 step long, trajectories with $\alpha$ sampled from a uniform distribution 0-2.  A Transformer Encoder was then trained to predict $\alpha$ using a pytorch implementation. Preliminary analysis suggests that an embedding size close to 32 is enough to fully take advantage of the information contained in the trajectories.
+Methods based on fractional Brownian motion are a simple, though mathematically rigorous, way to simulate diffusion trajectories starting from the $\alpha$ parameter. A simulator[^3] was used to generate 60000, 100 step long, trajectories with $\alpha$ sampled from a uniform distribution 0-1.8. A Transformer Encoder was then trained to predict $\alpha$ using a pytorch implementation. Preliminary analysis suggests that an embedding size close to 30, together with 2 attention heads, are enough to fully take advantage of the information contained in the trajectories. After 3 epochs with a learning rate of 0.001, MAE loss and batch size of 10, the model achieved an average loss of 0.22 on the validation set.
 
 <p align="center">
   <picture>
@@ -79,7 +79,7 @@ Output:
 _Real alpha 0.7, predicted alpha 0.746_
 
 ## Credits
-I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from [G. Volpe et al.](https://iopscience.iop.org/article/10.1088/1751-8121/ac070a) and his team and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
+I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This work was inspired by this paper from [A. Argun, G. Volpe and S. Bo](https://iopscience.iop.org/article/10.1088/1751-8121/ac070a), and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
 
 
 
