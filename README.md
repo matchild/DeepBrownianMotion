@@ -29,8 +29,8 @@ Whenever $\alpha \neq 1$ the process is called _anomalous diffusion_.
 There have been attemps to use deep learning techniques to overperform traditional methods to infer the $\alpha$ parameter from a trajectory[^1]. This project is meant to extend the previously used _state of the art_ approach -an LSTM neual network- with a Transformer Encoder[^2]
 
 
-[^1]: Volpe's paper
-[^2]: Attention is all you need paper
+[^1]: Aykut Argun et al 2021 J. Phys. A: Math. Theor. 54 294003
+[^2]: [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 
 ## Training
 Methods based on Fractional Brownian motion are a simple, though mathematically rigorous, way to simulate diffusion trajectories starting from the $\alpha$ parameter. A simulator[^3] was used to generate 200000, 100 step long, trajectories with $\alpha$ sampled from a uniform distribution 0-2.  A Transformer Encoder was then trained to predict $\alpha$ using a pytorch implementation. Preliminary analysis suggests that an embedding size close to 32 is enough to fully take advantage of the information contained in the trajectories.
@@ -40,10 +40,10 @@ Methods based on Fractional Brownian motion are a simple, though mathematically 
     <img src="https://github.com/matchild/DeepBrownianMotion/blob/main/media/training.png">
   </picture>
     <br>
-      Mean squared error (MSE) as a function of the number of iterations. Vertical red dashed lines represent epochs.
+      Mean absolute error (MAE) as a function of the number of iterations. Vertical red dashed lines represent epochs.
 </p>
 
-[^3]: stochastic
+[^3]: [stochastic](https://github.com/crflynn/stochastic) by crflynn
 
 ## Requirements
 
@@ -79,7 +79,7 @@ Output:
 _Real alpha 0.7, predicted alpha 0.746_
 
 ## Credits
-I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from Volpe and his team and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
+I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from [G. Volpe et al.](https://iopscience.iop.org/article/10.1088/1751-8121/ac070a) and his team and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
 
 
 
