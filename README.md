@@ -11,7 +11,7 @@
       MSD against time for different fractional Brownian motion realizations ($\alpha$ = 0.5, 1.0, and 1.5).
 </p>
 Let's consider the example of a particle immersed in a medium. Since its dynamics is complicated and depends on a very large number of parameters, it is not straightforward to identify useful quantities that characterize its motion. One of the most important is the mean squared displacement (MSD),  which connects time to the average of the squared distance travelled.
-Given a continuous random variable $\boldsymbol{X}(t)$ describing the position of a particle at time $t$, MSD is defined as:
+Given a continuous random variable $\boldsymbol{X}(t)$ describing the position of a particle at time t, MSD is defined as:
 
 
    $\mathrm{MSD}\left(\tau\right)$ $=$ $\langle\left|\boldsymbol{X}\left(t+\tau\right)-\boldsymbol{X}\left(t\right)\right|^2\rangle$
@@ -37,20 +37,41 @@ Methods based on Fractional Brownian motion are a simple, though mathematically 
 
 [^3]: stochastic
 
+## Requirements
+
+```python
+pip install numpy, stochastic, torch
+```
+
 ## Usage
 This script takes as input a vector containing the positions of the particle and returns the $\alpha$ parameter.
 
 ```python
 from DeepBrownianMotion import DeepBrownianMotion
+from stochastic.processes import FractionalBrownianMotion
+import numpy as np
 
-#Generate a vector of random numbers to use as an example
+# Choose trajectory parameters
+alpha=0.7
+trajectory_length=100
 
+# Instantiate simulator object
+f = FractionalBrownianMotion(hurst=0.5*alpha, t=1)
+trajectory = f.sample(trajectory_length-1).reshape(1, trajectory_length)
 
+# Instantiate deep learning model
+dpm = DeepBrownianMotion(device='cpu')
+alpha_pred = np.around(dpm.inference(trajectory).item(), 3)
+
+print('Real alpha {0}, predicted alpha {1}'.format(alpha, alpha_pred) )
 ```
+Output:
 
+
+_Real alpha 0.7, predicted alpha 0.746_
 
 ## Credits
-I wanted to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from Volpe and his team and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
+I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This analysis was inspired by this paper from Volpe and his team and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
 
 
 
