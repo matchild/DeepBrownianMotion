@@ -80,7 +80,7 @@ Output:
 _Real alpha 0.7, predicted alpha 0.746_
 
 ## Credits
-I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This work was inspired by this paper from [A. Argun, G. Volpe and S. Bo](https://iopscience.iop.org/article/10.1088/1751-8121/ac070a), and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing work.
+I want to thank Marco Gherardi from the Univeristy of Milan for his support on a previous closely related project. This work was inspired by this paper from [A. Argun, G. Volpe and S. Bo](https://iopscience.iop.org/article/10.1088/1751-8121/ac070a), and would not have been possible without the [stochastic](https://github.com/crflynn/stochastic) simulation tool. As always, I also want to thank the [pytorch](https://pytorch.org/) team for their amazing library.
 
 
 
