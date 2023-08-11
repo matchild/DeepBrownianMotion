@@ -34,7 +34,7 @@ There have been attemps to use deep learning techniques to overperform tradition
 [^2]: [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 
 ## Training
-Methods based on fractional Brownian motion are a simple, though mathematically rigorous, way to simulate diffusion trajectories starting from the $\alpha$ parameter. A simulator[^3] was used to generate 60000, 100 step long, trajectories with $\alpha$ sampled from a uniform distribution 0-1.8. A Transformer Encoder was then trained to predict $\alpha$ using a pytorch implementation. Preliminary analysis suggests that an embedding size close to 30, together with 2 attention heads, are enough to fully take advantage of the information contained in the trajectories. After 3 epochs with a learning rate of 0.001, MAE loss and batch size of 10, the model achieved an average loss of 0.22 on the validation set.
+Methods based on fractional Brownian motion are a simple, though mathematically rigorous, way to simulate diffusion trajectories starting from the $\alpha$ parameter. A simulator[^3] was used to generate 60000, 100 step long, trajectories with $\alpha$ sampled from a uniform distribution 0-1.8. A Transformer Encoder was then trained to predict $\alpha$ using a pytorch implementation. Preliminary analysis suggests that an embedding size close to 30, together with 2 attention heads, is enough to fully take advantage of the information contained in the trajectories. After 3 epochs with a learning rate of 0.001, MAE loss, Adam optimizer and batch size of 10, the model achieved an average loss of 0.22 on the validation set.
 
 <p align="center">
   <picture>
